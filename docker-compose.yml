@@ -1,0 +1,48 @@
+services:
+  db: 
+    image: postgres:17-alpine
+    container_name: db-go-tweets
+    restart: no
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    command: postgres -c password_encryption=md5
+
+  app:
+    build: . 
+    container_name: app-go-tweets
+    restart: no
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: air -c .air.toml
+  
+  adminer:
+    image: adminer
+    container_name: adminer-go-tweets
+    restart: no
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+  dbmate:
+    image: amacneil/dbmate
+    container_name: dbmate-runner
+    volumes:
+      - ./db:/db
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: ["--help"]
+
+volumes:
+  db-data:

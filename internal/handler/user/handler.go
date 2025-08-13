@@ -1,0 +1,31 @@
+package user
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/kucingscript/go-tweets/internal/service/user"
+)
+
+type Handler struct {
+	gin         *gin.Engine
+	validate    *validator.Validate
+	userService user.UserService
+}
+
+func NewHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService) *Handler {
+	return &Handler{
+		gin:         gin,
+		validate:    validate,
+		userService: userService,
+	}
+}
+
+func (h *Handler) RouteList() {
+	api := h.gin.Group("/api")
+	v1 := api.Group("/v1")
+
+	authRoute := v1.Group("/auth")
+	{
+		authRoute.POST("/register", h.Register)
+	}
+}

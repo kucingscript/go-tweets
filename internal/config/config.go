@@ -1,0 +1,43 @@
+package config
+
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
+type Config struct {
+	PORT           string
+	DBUrlMigration string
+	JWTSecret      string
+
+	DBHost string
+	DBPort string
+	DBUser string
+	DBPass string
+	DBName string
+}
+
+func LoadConfig() (*Config, error) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: Could not load .env file. Falling back to environment variables.")
+	} else {
+		log.Println("Config loaded from .env file")
+	}
+
+	log.Println("Config loaded")
+
+	return &Config{
+		PORT:           os.Getenv("APP_PORT"),
+		DBUrlMigration: os.Getenv("DATABASE_URL"),
+		JWTSecret:      os.Getenv("JWT_SECRET"),
+
+		DBHost: os.Getenv("DB_HOST"),
+		DBPort: os.Getenv("DB_PORT"),
+		DBUser: os.Getenv("POSTGRES_USER"),
+		DBPass: os.Getenv("POSTGRES_PASSWORD"),
+		DBName: os.Getenv("POSTGRES_DB"),
+	}, nil
+}
