@@ -22,6 +22,8 @@ type Mailer struct {
 
 func NewMailer(cfg *config.Config) *Mailer {
 	dialer := gomail.NewDialer(cfg.SMTPHost, cfg.SMTPPort, cfg.SMTPUser, cfg.SMTPPass)
+
+	// disable this on production
 	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	return &Mailer{

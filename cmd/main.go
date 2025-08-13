@@ -15,6 +15,9 @@ import (
 )
 
 func main() {
+
+	// gin.SetMode(gin.ReleaseMode) Enable for production
+
 	r := gin.Default()
 	validate := validator.New()
 
