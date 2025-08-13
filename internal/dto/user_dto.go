@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type (
 	RegisterRequest struct {
 		Email           string `json:"email" validate:"required,email"`
@@ -9,6 +11,10 @@ type (
 	}
 
 	RegisterResponse struct {
-		ID int64 `json:"id"`
+		ID         int64     `json:"id"`
+		Email      string    `json:"email"`
+		Username   string    `json:"username"`
+		IsVerified bool      `json:"is_verified"`
+		CreatedAt  time.Time `json:"created_at"`
 	}
 )

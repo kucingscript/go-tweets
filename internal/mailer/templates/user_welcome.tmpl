@@ -1,0 +1,30 @@
+{{define "subject"}}Welcome to Go-Tweets! Please Verify Your Email{{end}}
+
+{{define "plainBody"}}
+Hi {{.Username}},
+
+Thanks for signing up for Go-Tweets! To complete your registration, please verify your email by clicking the link below:
+{{.VerificationLink}}
+
+If you did not sign up for this account, you can ignore this email.
+
+Thanks,
+The Go-Tweets Team
+{{end}}
+
+{{define "htmlBody"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>Hi {{.Username}},</p>
+    <p>Thanks for signing up for Go-Tweets! To complete your registration, please click the link below to verify your email address.</p>
+    <p><a href="{{.VerificationLink}}">Verify Email</a></p>
+    <p>If you did not sign up for this account, you can ignore this email.</p>
+    <p>Thanks,<br>The Go-Tweets Team</p>
+</body>
+</html>
+{{end}}

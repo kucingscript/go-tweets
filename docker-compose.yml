@@ -21,9 +21,6 @@ services:
       - .env
     depends_on:
       - db
-    volumes:
-      - .:/app
-    command: air -c .air.toml
   
   adminer:
     image: adminer

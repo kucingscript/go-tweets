@@ -7,16 +7,16 @@ import (
 	"github.com/kucingscript/go-tweets/internal/model"
 )
 
-func (r *userRepository) CreateUser(ctx context.Context, user *model.UserModel) (int64, error) {
-	query := `INSERT INTO users (email, username, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)
-			RETURNING id;`
+func (r *userRepository) CreateUser(ctx context.Context, user *model.UserModel) error {
+	query := `INSERT INTO users (email, username, password) VALUES ($1, $2, $3)
+			RETURNING id, created_at, updated_at, is_verified;`
 
-	var userID int64
+	row := r.db.QueryRow(ctx, query, user.Email, user.Username, user.Password)
 
-	err := r.db.QueryRow(ctx, query, user.Email, user.Username, user.Password).Scan(&userID)
+	err := row.Scan(&user.ID, &user.CreatedAt, &user.UpdatedAt, &user.IsVerified)
 	if err != nil {
-		return 0, fmt.Errorf("unable to create user: %w", err)
+		return fmt.Errorf("failed to create user: %w", err)
 	}
 
-	return userID, nil
+	return nil
 }

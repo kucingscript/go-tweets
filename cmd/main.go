@@ -8,6 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/kucingscript/go-tweets/internal/config"
 	userHandler "github.com/kucingscript/go-tweets/internal/handler/user"
+	"github.com/kucingscript/go-tweets/internal/mailer"
 	userRepository "github.com/kucingscript/go-tweets/internal/repository/user"
 	userService "github.com/kucingscript/go-tweets/internal/service/user"
 	"github.com/kucingscript/go-tweets/pkg/postgres"
@@ -31,8 +32,10 @@ func main() {
 
 	r.Use(gin.Logger(), gin.Recovery())
 
+	mailer := mailer.NewMailer(cfg)
+
 	userRepository := userRepository.NewRepository(db)
-	userService := userService.NewUserService(cfg, userRepository)
+	userService := userService.NewUserService(cfg, userRepository, mailer)
 	userHandler := userHandler.NewHandler(r, validate, userService)
 	userHandler.RouteList()
 

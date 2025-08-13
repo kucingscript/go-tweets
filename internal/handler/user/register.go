@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/kucingscript/go-tweets/internal/dto"
 )
 
@@ -14,20 +15,33 @@ func (h *Handler) Register(c *gin.Context) {
 	)
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
 
 	if err := h.validate.Struct(req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		errorMessages := make(map[string]string)
+		for _, e := range err.(validator.ValidationErrors) {
+			errorMessages[e.Field()] = "Error: " + e.Tag()
+		}
+
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": errorMessages})
 		return
 	}
 
-	userID, statusCode, err := h.userService.Register(ctx, &req)
+	createdUser, statusCode, err := h.userService.Register(ctx, &req)
 	if err != nil {
-		c.AbortWithStatusJSON(statusCode, err.Error())
+		c.AbortWithStatusJSON(statusCode, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, dto.RegisterResponse{ID: userID})
+	response := dto.RegisterResponse{
+		ID:         createdUser.ID,
+		Email:      createdUser.Email,
+		Username:   createdUser.Username,
+		IsVerified: createdUser.IsVerified,
+		CreatedAt:  createdUser.CreatedAt,
+	}
+
+	c.JSON(http.StatusCreated, response)
 }
