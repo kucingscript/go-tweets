@@ -8,8 +8,9 @@ import (
 )
 
 type UserRepository interface {
-	GetUserByEmailOrUsername(ctx context.Context, email, username string) (*model.UserModel, error)
+	GetUserByEmail(ctx context.Context, email string) (*model.UserModel, error)
 	CreateUser(ctx context.Context, user *model.UserModel) error
+
 	UpdateVerificationToken(ctx context.Context, userID int64, token string) error
 	GetUserByVerificationToken(ctx context.Context, token string) (*model.UserModel, error)
 	VerifyUser(ctx context.Context, userID int64) error

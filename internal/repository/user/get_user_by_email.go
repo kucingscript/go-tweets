@@ -8,13 +8,12 @@ import (
 	"github.com/kucingscript/go-tweets/internal/model"
 )
 
-func (r *userRepository) GetUserByEmailOrUsername(ctx context.Context, email, username string) (*model.UserModel, error) {
-	query := `SELECT id, username, email, password, created_at, updated_at
+func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*model.UserModel, error) {
+	query := `SELECT id, email, username, password, created_at, updated_at
 			FROM users
-			WHERE email = $1
-			OR username = $2`
+			WHERE email = $1`
 
-	row := r.db.QueryRow(ctx, query, email, username)
+	row := r.db.QueryRow(ctx, query, email)
 
 	var user model.UserModel
 	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.CreatedAt, &user.UpdatedAt)

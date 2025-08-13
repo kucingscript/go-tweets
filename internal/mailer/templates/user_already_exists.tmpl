@@ -1,0 +1,30 @@
+{{define "subject"}}An Account Already Exists for This Email{{end}}
+
+{{define "plainBody"}}
+Hi {{.Username}},
+
+Someone just tried to create an account with your email address at Go-Tweets.
+
+If this was you, you can simply log in with your existing password. If you've forgotten your password, you can reset it at any time.
+
+If you did not attempt to sign up, you can safely ignore this email.
+
+Thanks,
+The Go-Tweets Team
+{{end}}
+
+{{define "htmlBody"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>Hi {{.Username}},</p>
+    <p>Someone just tried to create an account with your email address at Go-Tweets.</p>
+    <p>If this was you, you can log in with your existing password or reset it if you've forgotten. If you did not attempt to sign up, you can safely ignore this email.</p>
+    <p>Thanks,<br>The Go-Tweets Team</p>
+</body>
+</html>
+{{end}}

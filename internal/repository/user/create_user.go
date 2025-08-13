@@ -9,7 +9,7 @@ import (
 
 func (r *userRepository) CreateUser(ctx context.Context, user *model.UserModel) error {
 	query := `INSERT INTO users (email, username, password) VALUES ($1, $2, $3)
-			RETURNING id, created_at, updated_at, is_verified;`
+			RETURNING id, created_at, updated_at, is_verified`
 
 	row := r.db.QueryRow(ctx, query, user.Email, user.Username, user.Password)
 

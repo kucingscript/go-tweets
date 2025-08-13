@@ -224,7 +224,3 @@ To simulate this verification, use the token with the endpoint:
 ```sh
 curl -X GET http://localhost:8080/api/users/verify-email?token=YOUR_VERIFICATION_TOKEN
 ```
-
-```
-
-```

@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,13 +14,20 @@ import (
 
 func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest) (*model.UserModel, int, error) {
 	// check user exist
-	userExist, err := s.userRepository.GetUserByEmailOrUsername(ctx, req.Email, req.Username)
+	userExist, err := s.userRepository.GetUserByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}
 
 	if userExist != nil {
-		return nil, http.StatusBadRequest, errors.New("user already exist")
+		go func() {
+			err := s.mailer.Send(userExist.Email, "user_already_exists.tmpl", userExist)
+			if err != nil {
+				log.Printf("ERROR: could not send duplicate registration email to %s: %s", userExist.Email, err)
+			}
+		}()
+
+		return userExist, http.StatusCreated, nil
 	}
 
 	// hash password
@@ -43,6 +49,7 @@ func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 	}
 
 	// Email Verification
+
 	// Token Generation
 	token, err := utils.GenerateSecureToken(32)
 	if err != nil {
@@ -55,14 +62,12 @@ func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 		return nil, http.StatusInternalServerError, err
 	}
 
-	// prepare email
-	emailData := map[string]interface{}{
-		"Username":         user.Username,
-		"VerificationLink": fmt.Sprintf("http://localhost:%s/api/v1/auth/verify-email?token=%s", s.cfg.PORT, token),
-	}
-
 	// Send verification email asynchronously
 	go func() {
+		emailData := map[string]interface{}{
+			"Username":         user.Username,
+			"VerificationLink": fmt.Sprintf("http://localhost:%s/api/v1/auth/verify-email?token=%s", s.cfg.PORT, token),
+		}
 		err := s.mailer.Send(user.Email, "user_welcome.tmpl", emailData)
 		if err != nil {
 			log.Printf("ERROR: could not send verification email to %s: %s", user.Email, err)
