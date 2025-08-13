@@ -42,8 +42,8 @@ func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 		return nil, http.StatusInternalServerError, err
 	}
 
-	// Verifikasi Email
-	// Token Verifikasi Email
+	// Email Verification
+	// Token Generation
 	token, err := utils.GenerateSecureToken(32)
 	if err != nil {
 		log.Printf("CRITICAL: could not generate verification token for user %d: %v", user.ID, err)

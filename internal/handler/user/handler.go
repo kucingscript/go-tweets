@@ -27,6 +27,6 @@ func (h *Handler) RouteList() {
 	authRoute := v1.Group("/auth")
 	{
 		authRoute.POST("/register", h.Register)
-		authRoute.GET("/verify/:token", h.VerifyEmail)
+		authRoute.GET("/verify-email", h.VerifyEmail)
 	}
 }

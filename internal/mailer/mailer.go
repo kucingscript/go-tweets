@@ -2,14 +2,17 @@ package mailer
 
 import (
 	"bytes"
+	"crypto/tls"
 	"embed"
 	"fmt"
 	"html/template"
+	"path"
 
 	"github.com/kucingscript/go-tweets/internal/config"
 	"gopkg.in/gomail.v2"
 )
 
+//go:embed templates
 var templateFS embed.FS
 
 type Mailer struct {
@@ -19,6 +22,7 @@ type Mailer struct {
 
 func NewMailer(cfg *config.Config) *Mailer {
 	dialer := gomail.NewDialer(cfg.SMTPHost, cfg.SMTPPort, cfg.SMTPUser, cfg.SMTPPass)
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	return &Mailer{
 		dialer: dialer,
@@ -27,7 +31,7 @@ func NewMailer(cfg *config.Config) *Mailer {
 }
 
 func (m *Mailer) Send(recipient string, templateFile string, data interface{}) error {
-	tmpl, err := template.New("email").ParseFS(templateFS, templateFile)
+	tmpl, err := template.New(templateFile).ParseFS(templateFS, path.Join("templates", templateFile))
 	if err != nil {
 		return fmt.Errorf("failed to parse email template '%s': %w", templateFile, err)
 	}
