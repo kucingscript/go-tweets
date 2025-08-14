@@ -35,10 +35,7 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	response := dto.LoginResponse{
-		Token:        token,
-		RefreshToken: refreshToken,
-	}
+	h.setTokenCookies(c, token, refreshToken)
 
-	c.JSON(http.StatusCreated, response)
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
 }

@@ -21,12 +21,17 @@ func (s *userService) Login(ctx context.Context, req *dto.LoginRequest) (string,
 	}
 
 	if userExist == nil {
-		return "", "", http.StatusNotFound, errors.New("wrong email or password")
+		return "", "", http.StatusUnauthorized, errors.New("invalid credentials")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userExist.Password), []byte(req.Password))
 	if err != nil {
-		return "", "", http.StatusNotFound, errors.New("wrong email or password")
+		return "", "", http.StatusUnauthorized, errors.New("invalid credentials")
+	}
+
+	// check email is verified
+	if !userExist.IsVerified {
+		return "", "", http.StatusUnauthorized, errors.New("please verify your email first")
 	}
 
 	// generate access token

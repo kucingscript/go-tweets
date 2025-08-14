@@ -30,5 +30,6 @@ func (h *Handler) RouteList() {
 		authRoute.GET("/verify-email", h.VerifyEmail)
 
 		authRoute.POST("/login", h.Login)
+		authRoute.POST("/logout", h.Logout)
 	}
 }

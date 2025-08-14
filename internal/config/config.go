@@ -14,6 +14,8 @@ type Config struct {
 	DBUrlMigration string
 	JWTSecret      string
 
+	AllowedOrigins string
+
 	DBHost string
 	DBPort string
 	DBUser string
@@ -47,6 +49,8 @@ func LoadConfig() (*Config, error) {
 		PORT:           os.Getenv("APP_PORT"),
 		DBUrlMigration: os.Getenv("DATABASE_URL"),
 		JWTSecret:      os.Getenv("JWT_SECRET"),
+
+		AllowedOrigins: os.Getenv("ALLOWED_ORIGINS"),
 
 		DBHost: os.Getenv("DB_HOST"),
 		DBPort: os.Getenv("DB_PORT"),
