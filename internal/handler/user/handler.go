@@ -28,5 +28,7 @@ func (h *Handler) RouteList() {
 	{
 		authRoute.POST("/register", h.Register)
 		authRoute.GET("/verify-email", h.VerifyEmail)
+
+		authRoute.POST("/login", h.Login)
 	}
 }

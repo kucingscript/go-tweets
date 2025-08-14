@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kucingscript/go-tweets/internal/model"
@@ -14,6 +15,9 @@ type UserRepository interface {
 	UpdateVerificationToken(ctx context.Context, userID int64, token string) error
 	GetUserByVerificationToken(ctx context.Context, token string) (*model.UserModel, error)
 	VerifyUser(ctx context.Context, userID int64) error
+
+	GetRefreshToken(ctx context.Context, userID int64, now time.Time) (*model.RefreshTokenModel, error)
+	StoreRefreshToken(ctx context.Context, refreshToken *model.RefreshTokenModel) error
 }
 
 type userRepository struct {

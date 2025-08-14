@@ -125,7 +125,8 @@ CREATE TABLE public.refresh_tokens (
     user_id integer NOT NULL,
     refresh_token text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    expired_at timestamp with time zone
 );
 
 
@@ -350,4 +351,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20250812051949'),
     ('20250812052200'),
     ('20250812053352'),
-    ('20250813032923');
+    ('20250813032923'),
+    ('20250814134329');

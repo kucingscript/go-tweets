@@ -18,3 +18,15 @@ type (
 		CreatedAt  time.Time `json:"created_at"`
 	}
 )
+
+type (
+	LoginRequest struct {
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required"`
+	}
+
+	LoginResponse struct {
+		Token        string `json:"token"`
+		RefreshToken string `json:"refresh_token"`
+	}
+)
