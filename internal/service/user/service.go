@@ -15,6 +15,9 @@ type UserService interface {
 	VerifyEmail(ctx context.Context, token string) (int, error)
 
 	Login(ctx context.Context, req *dto.LoginRequest) (string, string, int, error)
+
+	ForgotPassword(ctx context.Context, email string) (int, error)
+	ResetPassword(ctx context.Context, req *dto.ResetPasswordRequest) (int, error)
 }
 
 type userService struct {

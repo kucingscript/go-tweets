@@ -172,7 +172,9 @@ CREATE TABLE public.users (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     is_verified boolean DEFAULT false NOT NULL,
     verification_token character varying(255),
-    verified_at timestamp with time zone
+    verified_at timestamp with time zone,
+    password_reset_token character varying(255),
+    password_reset_token_expires_at timestamp with time zone
 );
 
 
@@ -352,4 +354,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20250812052200'),
     ('20250812053352'),
     ('20250813032923'),
-    ('20250814134329');
+    ('20250814134329'),
+    ('20250815121651');

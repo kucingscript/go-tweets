@@ -13,6 +13,9 @@ type (
 		VerificationToken string     `json:"-"`
 		VerifiedAt        *time.Time `json:"verified_at,omitempty"`
 
+		PasswordResetToken          *string    `json:"-"`
+		PasswordResetTokenExpiresAt *time.Time `json:"-"`
+
 		CreatedAt time.Time `json:"created_at"`
 		UpdatedAt time.Time `json:"updated_at"`
 	}

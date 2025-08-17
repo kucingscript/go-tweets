@@ -30,3 +30,15 @@ type (
 		RefreshToken string `json:"refresh_token"`
 	}
 )
+
+type (
+	ForgotPasswordRequest struct {
+		Email string `json:"email" validate:"required,email"`
+	}
+
+	ResetPasswordRequest struct {
+		Token           string `json:"token" validate:"required"`
+		Password        string `json:"password" validate:"required,min=8"`
+		PasswordConfirm string `json:"password_confirm" validate:"required,eqfield=Password"`
+	}
+)

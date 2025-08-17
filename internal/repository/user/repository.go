@@ -18,6 +18,10 @@ type UserRepository interface {
 
 	GetRefreshToken(ctx context.Context, userID int64, now time.Time) (*model.RefreshTokenModel, error)
 	StoreRefreshToken(ctx context.Context, refreshToken *model.RefreshTokenModel) error
+
+	SetPasswordResetToken(ctx context.Context, userID int64, token string, expiredAt time.Time) error
+	GetUserByResetToken(ctx context.Context, token string) (*model.UserModel, error)
+	UpdatePassword(ctx context.Context, userID int64, password string) error
 }
 
 type userRepository struct {
