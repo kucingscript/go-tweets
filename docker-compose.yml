@@ -2,9 +2,11 @@ services:
   db: 
     image: postgres:17-alpine
     container_name: db-go-tweets
-    restart: no
+    restart: on-failure
     env_file:
       - .env
+    environment:
+      - TZ=Asia/Jakarta
     ports:
       - "5432:5432"
     volumes:
@@ -14,7 +16,7 @@ services:
   app:
     build: . 
     container_name: app-go-tweets
-    restart: no
+    restart: on-failure
     ports:
       - "8080:8080"
     env_file:

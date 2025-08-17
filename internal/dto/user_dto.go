@@ -24,11 +24,6 @@ type (
 		Email    string `json:"email" validate:"required,email"`
 		Password string `json:"password" validate:"required,min=8"`
 	}
-
-	LoginResponse struct {
-		Token        string `json:"token"`
-		RefreshToken string `json:"refresh_token"`
-	}
 )
 
 type (

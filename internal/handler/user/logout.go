@@ -7,8 +7,19 @@ import (
 )
 
 func (h *Handler) Logout(c *gin.Context) {
-	c.SetCookie("access_token", "", -1, "/api", "", true, true)
-	c.SetCookie("refresh_token", "", -1, "/api/v1/auth", "", true, true)
+	refreshToken, err := c.Cookie(refreshTokenCookieName)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "user not logged in"})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
+	statusCode, err := h.userService.Logout(c.Request.Context(), refreshToken)
+	if err != nil {
+		c.AbortWithStatusJSON(statusCode, gin.H{"error": err.Error()})
+		return
+	}
+
+	h.clearTokenCookies(c)
+
+	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
 }

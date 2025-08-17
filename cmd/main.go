@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -9,9 +10,11 @@ import (
 	"github.com/kucingscript/go-tweets/internal/config"
 	userHandler "github.com/kucingscript/go-tweets/internal/handler/user"
 	"github.com/kucingscript/go-tweets/internal/mailer"
+	"github.com/kucingscript/go-tweets/internal/middleware"
 	userRepository "github.com/kucingscript/go-tweets/internal/repository/user"
 	userService "github.com/kucingscript/go-tweets/internal/service/user"
 	"github.com/kucingscript/go-tweets/pkg/postgres"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -33,6 +36,7 @@ func main() {
 
 	defer db.Close()
 
+	r.Use(middleware.CORSMiddleware(cfg))
 	r.Use(gin.Logger(), gin.Recovery())
 
 	mailer := mailer.NewMailer(cfg)
@@ -41,6 +45,13 @@ func main() {
 	userService := userService.NewUserService(cfg, userRepository, mailer)
 	userHandler := userHandler.NewHandler(r, validate, userService)
 	userHandler.RouteList()
+
+	c := cron.New()
+	c.AddFunc("@monthly", func() {
+		log.Println("Running scheduled task to clean up expired tokens...")
+		userService.CleanUpExpiredTokens(context.Background())
+	})
+	c.Start()
 
 	server := fmt.Sprintf(":%s", cfg.PORT)
 	r.Run(server)

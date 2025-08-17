@@ -18,6 +18,8 @@ type UserRepository interface {
 
 	GetRefreshToken(ctx context.Context, userID int64, now time.Time) (*model.RefreshTokenModel, error)
 	StoreRefreshToken(ctx context.Context, refreshToken *model.RefreshTokenModel) error
+	DeleteRefreshToken(ctx context.Context, token string) error
+	DeleteExpiredRefreshTokens(ctx context.Context) (int64, error)
 
 	SetPasswordResetToken(ctx context.Context, userID int64, token string, expiredAt time.Time) error
 	GetUserByResetToken(ctx context.Context, token string) (*model.UserModel, error)
