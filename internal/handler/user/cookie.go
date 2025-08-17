@@ -16,7 +16,7 @@ func (h *Handler) setTokenCookies(c *gin.Context, accessToken, refreshToken stri
 	accessCookie := &http.Cookie{
 		Name:     accessTokenCookieName,
 		Value:    accessToken,
-		Expires:  time.Now().Add(1 * time.Hour),
+		Expires:  time.Now().Add(15 * time.Minute),
 		Path:     "/api",
 		Domain:   "", // automatically set based on domain
 		Secure:   true,

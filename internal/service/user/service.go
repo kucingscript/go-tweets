@@ -16,6 +16,7 @@ type UserService interface {
 
 	Login(ctx context.Context, req *dto.LoginRequest) (string, string, int, error)
 	Logout(ctx context.Context, refreshToken string) (int, error)
+	RefreshToken(ctx context.Context, refreshToken string) (string, int, error)
 	CleanUpExpiredTokens(ctx context.Context)
 
 	ForgotPassword(ctx context.Context, email string) (int, error)

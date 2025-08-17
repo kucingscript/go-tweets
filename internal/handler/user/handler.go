@@ -31,6 +31,7 @@ func (h *Handler) RouteList() {
 
 		authRoute.POST("/login", h.Login)
 		authRoute.POST("/logout", h.Logout)
+		authRoute.POST("/refresh-token", h.RefreshToken)
 
 		authRoute.POST("/forgot-password", h.ForgotPassword)
 		authRoute.POST("/reset-password", h.ResetPassword)
