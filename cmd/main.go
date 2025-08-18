@@ -47,7 +47,7 @@ func main() {
 	userHandler.RouteList()
 
 	c := cron.New()
-	c.AddFunc("@monthly", func() {
+	c.AddFunc("@daily", func() {
 		log.Println("Running scheduled task to clean up expired tokens...")
 		userService.CleanUpExpiredTokens(context.Background())
 	})

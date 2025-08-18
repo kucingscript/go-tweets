@@ -16,7 +16,7 @@ services:
   app:
     build: . 
     container_name: app-go-tweets
-    restart: on-failure
+    restart: no
     ports:
       - "8080:8080"
     env_file:
