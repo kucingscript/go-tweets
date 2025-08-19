@@ -9,26 +9,21 @@ import (
 )
 
 type Handler struct {
-	gin         *gin.Engine
 	validate    *validator.Validate
 	userService user.UserService
 	cfg         *config.Config
 }
 
-func NewUserHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService, cfg *config.Config) *Handler {
+func NewUserHandler(validate *validator.Validate, userService user.UserService, cfg *config.Config) *Handler {
 	return &Handler{
-		gin:         gin,
 		validate:    validate,
 		userService: userService,
 		cfg:         cfg,
 	}
 }
 
-func (h *Handler) RouteList() {
-	api := h.gin.Group("/api")
-	v1 := api.Group("/v1")
-
-	authRoute := v1.Group("/auth")
+func (h *Handler) RouteList(r *gin.RouterGroup) {
+	authRoute := r.Group("/auth")
 	{
 		authRoute.POST("/register", h.Register)
 		authRoute.GET("/verify-email", h.VerifyEmail)
@@ -41,7 +36,7 @@ func (h *Handler) RouteList() {
 		authRoute.POST("/reset-password", h.ResetPassword)
 	}
 
-	userRoute := v1.Group("/user")
+	userRoute := r.Group("/user")
 	userRoute.Use(middleware.AuthMiddleware(h.cfg))
 	{
 		userRoute.GET("/profile", h.GetProfile)

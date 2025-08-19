@@ -37,9 +37,10 @@ func (s *userService) Register(ctx context.Context, req *dto.RegisterRequest) (*
 	}
 
 	// create user
+	sanitizedUsername := s.htmlSanitizer.Sanitize(req.Username)
 	user := &model.UserModel{
 		Email:    req.Email,
-		Username: req.Username,
+		Username: sanitizedUsername,
 		Password: string(passwordHash),
 	}
 

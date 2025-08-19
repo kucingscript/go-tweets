@@ -8,7 +8,10 @@ import (
 )
 
 type PostRepository interface {
-	StorePost(ctx context.Context, post *model.PostModel) (int64, error)
+	StorePost(ctx context.Context, post *model.PostModel) (*model.PostModel, error)
+	GetPostByID(ctx context.Context, postID int64) (*model.PostModel, error)
+	UpdatePost(ctx context.Context, post *model.PostModel) (*model.PostModel, error)
+	SoftDeletePost(ctx context.Context, postID int64) error
 }
 
 type postRepository struct {

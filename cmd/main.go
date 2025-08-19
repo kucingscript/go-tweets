@@ -50,11 +50,13 @@ func main() {
 	userService := userService.NewUserService(cfg, userRepository, mailer)
 	postService := postService.NewPostService(cfg, postRepository)
 
-	userHandler := userHandler.NewUserHandler(r, validate, userService, cfg)
-	postHandler := postHandler.NewPostHandler(r, validate, postService)
+	v1 := r.Group("/api/v1")
 
-	userHandler.RouteList()
-	postHandler.RouteList()
+	userHandler := userHandler.NewUserHandler(validate, userService, cfg)
+	postHandler := postHandler.NewPostHandler(validate, postService, cfg)
+
+	userHandler.RouteList(v1)
+	postHandler.RouteList(v1)
 
 	c := cron.New()
 	c.AddFunc("@daily", func() {
