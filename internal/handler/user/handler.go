@@ -3,6 +3,8 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/kucingscript/go-tweets/internal/config"
+	"github.com/kucingscript/go-tweets/internal/middleware"
 	"github.com/kucingscript/go-tweets/internal/service/user"
 )
 
@@ -10,13 +12,15 @@ type Handler struct {
 	gin         *gin.Engine
 	validate    *validator.Validate
 	userService user.UserService
+	cfg         *config.Config
 }
 
-func NewHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService) *Handler {
+func NewHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService, cfg *config.Config) *Handler {
 	return &Handler{
 		gin:         gin,
 		validate:    validate,
 		userService: userService,
+		cfg:         cfg,
 	}
 }
 
@@ -35,5 +39,11 @@ func (h *Handler) RouteList() {
 
 		authRoute.POST("/forgot-password", h.ForgotPassword)
 		authRoute.POST("/reset-password", h.ResetPassword)
+	}
+
+	userRoute := v1.Group("/user")
+	userRoute.Use(middleware.AuthMiddleware(h.cfg))
+	{
+		userRoute.GET("/profile", h.GetProfile)
 	}
 }

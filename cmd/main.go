@@ -43,7 +43,7 @@ func main() {
 
 	userRepository := userRepository.NewRepository(db)
 	userService := userService.NewUserService(cfg, userRepository, mailer)
-	userHandler := userHandler.NewHandler(r, validate, userService)
+	userHandler := userHandler.NewHandler(r, validate, userService, cfg)
 	userHandler.RouteList()
 
 	c := cron.New()
