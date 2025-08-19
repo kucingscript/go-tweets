@@ -8,10 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/kucingscript/go-tweets/internal/config"
+	postHandler "github.com/kucingscript/go-tweets/internal/handler/post"
 	userHandler "github.com/kucingscript/go-tweets/internal/handler/user"
 	"github.com/kucingscript/go-tweets/internal/mailer"
 	"github.com/kucingscript/go-tweets/internal/middleware"
+	postRepository "github.com/kucingscript/go-tweets/internal/repository/post"
 	userRepository "github.com/kucingscript/go-tweets/internal/repository/user"
+	postService "github.com/kucingscript/go-tweets/internal/service/post"
 	userService "github.com/kucingscript/go-tweets/internal/service/user"
 	"github.com/kucingscript/go-tweets/pkg/postgres"
 	"github.com/robfig/cron/v3"
@@ -41,10 +44,17 @@ func main() {
 
 	mailer := mailer.NewMailer(cfg)
 
-	userRepository := userRepository.NewRepository(db)
+	userRepository := userRepository.NewUserRepository(db)
+	postRepository := postRepository.NewPostRepository(db)
+
 	userService := userService.NewUserService(cfg, userRepository, mailer)
-	userHandler := userHandler.NewHandler(r, validate, userService, cfg)
+	postService := postService.NewPostService(cfg, postRepository)
+
+	userHandler := userHandler.NewUserHandler(r, validate, userService, cfg)
+	postHandler := postHandler.NewPostHandler(r, validate, postService)
+
 	userHandler.RouteList()
+	postHandler.RouteList()
 
 	c := cron.New()
 	c.AddFunc("@daily", func() {

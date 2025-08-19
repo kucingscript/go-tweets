@@ -15,7 +15,7 @@ type Handler struct {
 	cfg         *config.Config
 }
 
-func NewHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService, cfg *config.Config) *Handler {
+func NewUserHandler(gin *gin.Engine, validate *validator.Validate, userService user.UserService, cfg *config.Config) *Handler {
 	return &Handler{
 		gin:         gin,
 		validate:    validate,
